@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+<meta charset="UTF-8">
+<title>게시글 등록</title>
+</head>
+<body>
+<th:block layout:fragment="content">
+<div class="d-flex justify-content-center text-center">
+	<div class="col-8">
+		<section class="my-5">
+			<form id="frm" action="insert" method="post" enctype="multipart/form-data">
+				<table class="table mb-5">
+					<tr>
+						<th scope="col" width="110">작성자</th>
+						<td class="text-start">
+							<input type="text" class="form-control"
+								   id="" name="memberId">
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">작성일</th>
+						<td class="text-start" 
+							th:text="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">첨부파일</th>
+						<td class="text-start">
+							<input type="file" class="form-control" 
+							       id="" name="file">
+						</td>
+					</tr>
+					<tr>
+						<td class="text-start" colspan="2">
+							<input type="text" class="form-control form-control-sm"
+							       id="" name="title">
+						</td>
+					</tr>
+					<tr>
+						<td class="text-start" colspan="2">
+							<textarea class="form-control" id="" name="contents" 
+									  rows="10" placeholder="Wrtie a Contents"></textarea>
+						</td>
+					</tr>
+				</table>
+				<div>
+					<button class="btn btn-outline-dark" type="submit">등록하기</button>
+					<button class="btn btn-outline-dark" type="reset">다시쓰기</button>
+				</div>
+			</form>
+		</section>
+	</div>
+</div>
+</th:block>
+</body>
+</html>
