@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hello.board.post.mapper.PostMapper">
+
+	<resultMap id="postWithComment"
+				type="com.hello.board.post.vo.PostVO">
+		<collection property="comments"
+					column="postid"
+					javaType="com.hello.board.comment.vo.CommentVO"
+					select="com.hello.board.comment.mapper.commentListSelect"
+		></collection>			
+	</resultMap>
+	
+	<select id="postSelectList" resultType="com.hello.board.post.vo.PostVO">
+		SELECT * 
+		FROM ( SELECT p.*,
+		              ROWNUM AS RNUM
+		       FROM( SELECT *
+		             FROM post
+		             WHERE <if test="state == 1">1=1</if>
+						   <if test="state == 2">P.TITLE LIKE '%'||#{key}||'%'</if>
+		             ORDER BY ID DESC ) p
+		      )
+		<![CDATA[WHERE 0 < RNUM AND RNUM <= 10]]>
+	</select>
+
+	<select id="getPostListCnt" resultType="int">
+		SELECT COUNT(*) AS LISTCNT
+		FROM POST
+		<if test="key != null and key != ''">
+			WHERE POST_TITLE LIKE '%'||#{key}||'%' 
+		</if>
+	</select>
+	
+	<select id="postSelect" resultMap="postWithComment">
+		SELECT *
+		FROM POST
+		WHERE ID = #{id}
+	</select>
+	
+	<insert id="postInsert" parameterType="com.hello.board.post.vo.PostVO">
+		<selectKey resultType="int" keyProperty="id" order="BEFORE">
+			SELECT CASE WHEN MAX(ID) != 0
+						THEN MAX(ID) + 1
+						ELSE 1 END
+						AS ID
+			FROM POST
+		</selectKey>
+	
+		INSERT INTO POST
+		VALUES (#{id}, 
+				#{memberId}, 
+				#{title}, 
+				#{contents}, 
+				#{enrollDate}, 
+				#{hit}, 
+				#{fileName},
+				#{originFileName},
+				#{memberName})
+	</insert>
+	
+	<update id="postUpdate" parameterType="com.hello.board.post.vo.PostVO">
+		UPDATE POST
+		<set>
+			<if test="title != null">TITLE = #{title}</if>
+			<if test="contents != null">, CONTENTS = #{contents}</if>
+			<if test="fileName != null">, FILENAME = #{fileName}</if>
+			<if test="originFileName != null">, ORIGINFILENAME = #{originFileName}</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+	
+	<delete id="postDelete">
+		DELETE POST
+		WHERE ID = #{id}
+	</delete>
+	
+	<update id="postHitUpdate"
+		parameterType="int">
+		UPDATE POST
+		SET HIT = HIT + 1
+		WHERE ID = #{id}
+	</update>
+
+</mapper>
