@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+<meta charset="UTF-8">
+<title>Hello Board!</title>
+</head>
+<body>
+<th:block layout:fragment="content">
+<th:block th:if="${msg != null}">
+	<script th:inline="javascript">alert(/*[[${msg}]]*/);</script>
+</th:block>
+<div class="d-flex justify-content-center text-center">
+	<div class="col-8">
+		<section class="my-5">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>번호</th>
+						<th>작성자</th>
+						<th>제목</th>
+						<th>작성일시</th>
+						<th>조회수</th>
+					</tr>
+				</thead>
+				<tbody>
+					<th:block th:if="${postList == null}">
+						<tr height="40">
+							<td colspan="5" align="center">게시글이 없습니다.</td>
+						</tr>
+					</th:block>
+					<th:block th:unless="${postList == null}">
+						<th:block th:each="post : ${postList}">
+							<tr class="post" th:data-id="${post.id}">
+								<td width=100 th:text="${post.id}"></td>						
+								<td width=200 th:text="${post.memberId}"></td>						
+								<td th:text="${post.title}"></td>						
+								<td width=200 th:text="${post.enrollDate}"></td>						
+								<td width=100 th:text="${post.hit}"></td>
+							</tr>					
+						</th:block>
+					</th:block>
+				</tbody>
+			</table>
+			<form id="selectFrm" action="post" method="get">
+				<input type="hidden" name="id">
+			</form>
+		  	<!-- <ul class="pagination">
+			    <li class="page-item <c:if test="${!paging.prev }"> disabled </c:if>">
+			      <a class="page-link" href="#"
+			      		onClick="pagingPrev('${paging.range }', '${paging.rangeSize }', '${paging.state }', '${paging.key }')">&laquo;</a>
+			    </li>
+			    
+			    <c:forEach begin="${paging.startPage }" end="${paging.endPage }" var="i">
+				    <li class="page-item <c:out value="${paging.page == i ? 'active' : ''}"/> ">
+				      <a class="page-link" href="#"
+				      		onClick="pagingNo('${i}', '${paging.range}', '${paging.rangeSize}', '${paging.state }', '${paging.key }')">${i }</a>
+				    </li>
+			    </c:forEach>
+			    <li class="page-item <c:if test="${!paging.next }"> disabled </c:if> ">
+			      <a class="page-link" href="#"
+			      		onClick="pagingNext('${paging.range }', '${paging.rangeSize }', '${paging.state }', '${paging.key }'">&raquo;</a>
+			    </li>
+		  	</ul> -->
+			<button id="writeBtn" class="btn btn-outline-dark" type="button">Write</button>
+	  	</section>
+	</div>
+</div>
+<script>
+
+	document.addEventListener('DOMContentLoaded', function() {
+		postSelect();
+		postInsertFrm();
+	})
+
+	function postSelect() {
+		let posts = document.querySelectorAll('.post');
+		
+		for (let i=0; i<posts.length; i++) {
+			posts[i].addEventListener('click', function() {
+				selectFrm.id.value = this.dataset.id;
+				selectFrm.submit();
+			})
+		}
+		
+	} 
+	
+	function postInsertFrm() {
+		writeBtn.addEventListener('click', function() {
+			location.href = 'post/insert';
+		})
+	}
+</script>
+</th:block>
+</body>
+</html>
