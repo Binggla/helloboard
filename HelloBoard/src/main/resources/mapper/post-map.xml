@@ -62,7 +62,8 @@
 	<update id="postUpdate" parameterType="com.hello.board.post.vo.PostVO">
 		UPDATE POST
 		<set>
-			<if test="title != null">TITLE = #{title}</if>
+			<if test="title != null">MEMBERID = #{memberId}</if>
+			<if test="title != null">,TITLE = #{title}</if>
 			<if test="contents != null">, CONTENTS = #{contents}</if>
 			<if test="fileName != null">, FILENAME = #{fileName}</if>
 			<if test="originFileName != null">, ORIGINFILENAME = #{originFileName}</if>
