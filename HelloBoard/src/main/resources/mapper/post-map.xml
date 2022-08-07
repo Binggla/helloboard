@@ -2,15 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hello.board.post.mapper.PostMapper">
 
-	<resultMap id="postWithComment"
-				type="com.hello.board.post.vo.PostVO">
-		<collection property="comments"
-					column="postid"
-					javaType="com.hello.board.comment.vo.CommentVO"
-					select="com.hello.board.comment.mapper.commentListSelect"
-		></collection>			
-	</resultMap>
-	
 	<select id="postSelectList" resultType="com.hello.board.post.vo.PostVO">
 		SELECT * 
 		FROM ( SELECT p.*,
@@ -32,10 +23,27 @@
 		</if>
 	</select>
 	
+	<resultMap id="postWithComment"
+				type="com.hello.board.post.vo.PostVO">
+		<collection property="comments"
+					javaType="List"
+					column="id"
+					ofType="com.hello.board.comment.vo.CommentVO"
+					select="commentListSelect"
+		></collection>			
+	</resultMap>
+	
 	<select id="postSelect" resultMap="postWithComment">
 		SELECT *
 		FROM POST
 		WHERE ID = #{id}
+	</select>
+	
+	<select id="commentListSelect" resultType="com.hello.board.comment.vo.CommentVO">
+		SELECT *
+		FROM P_COMMENT
+		WHERE POSTID = #{id}
+		ORDER BY "GROUP" DESC, DEPTH, ID
 	</select>
 	
 	<insert id="postInsert" parameterType="com.hello.board.post.vo.PostVO">

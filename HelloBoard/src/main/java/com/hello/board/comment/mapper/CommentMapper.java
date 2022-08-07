@@ -1,12 +1,11 @@
 package com.hello.board.comment.mapper;
 
-import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 
 import com.hello.board.comment.vo.CommentVO;
-import com.hello.board.post.vo.PostVO;
 
+@Mapper
 public interface CommentMapper {
-	List<CommentVO> commentListSelect(int id);
 	CommentVO commentSelect(CommentVO vo);
 	int commentInsert(CommentVO vo);
 	int commentUpdate(CommentVO vo);
