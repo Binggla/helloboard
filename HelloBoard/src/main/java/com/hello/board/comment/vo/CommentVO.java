@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CommentVO {
-	private int postId;
+	private String postId;
 	private int id;
 	private String memberId;
 	private String memberName;
-	private Date enrollData;
+	private Date enrollDate;
 	private String contents;
 	private int depth;
 	private int group;
