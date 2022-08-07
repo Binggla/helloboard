@@ -36,12 +36,13 @@
 				  	<div class="btn-group" role="group">
 				    <button id="btnGroupDrop1" type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">게시글 관리&nbsp;&nbsp;</button>
 					    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-					    	<form class="post-form" action="postUpdateForm.do" method="post">
-								<input type="hidden" id="postId" name="postId" value="${p.postId }">
+					    	<form class="post-form" action="post/update" method="get">
+								<input type="hidden" name="id" th:value="${post.id}">
 								<button class="down-btn" type="submit">수정</button>
 							</form>
-							<form class="down-form" action="postDelete.do" method="post" onsubmit="return delConfirm()">
-								<input type="hidden" id="postId" name="postId" value="${p.postId }">
+							<form class="down-form" action="post/delete" method="post">
+								<input type="hidden" name="id" th:value="${post.id}">
+								<input type="hidden" name="prevFile" th:value="${post.fileName}">
 								<button class="down-btn" type="submit">삭제</button>
 							</form>
 					    </div>
@@ -50,34 +51,34 @@
 			</div>
 			<table class="table">
 				<tr>
-					<th scope="col" width="110">작성자</th>
+					<th class="text-start" scope="col" width="110">작성자</th>
 					<td class="text-start" th:text="${post.memberId }">#</td>
 				</tr>
 				<tr>
-					<th scope="row">작성일</th>
+					<th class="text-start" scope="row">작성일</th>
 					<td class="text-start" th:text="${post.enrollDate }">#</td>
 				</tr>
 				<tr>
-					<th scope="row">제목</th>
+					<th class="text-start" scope="row">제목</th>
 					<td class="text-start" colspan="3" th:text="${post.title }">#</td>
 				</tr>
 				<tr>
-					<th scope="row">첨부파일</th>
+					<th class="text-start" scope="row">첨부파일</th>
 					<td class="text-start" colspan="3">
 						<th:block th:if="${post.fileName == null}">첨부파일 없음</th:block>
 						<th:block th:unless="${post.fileName == null}">
-							<a th:href=@{/download(fileName=${post.fileName},originName=${post.originFileName})}>[[${post.fileName}]]</a>
+							<a th:href=@{/download(fileName=${post.fileName},originName=${post.originFileName})}>[[${post.originFileName}]]</a>
 						</th:block>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row">내용</th>
+					<th class="text-start" scope="row">내용</th>
 					<td class="text-start" colspan="3" th:text="${post.contents }">#</td>
 				</tr>
 			</table>
 		</section>
 		<article>
-			<form class="cmt-insert-frm" action="commentInsert.do" method="post" onsubmit="return memberCheck(this)">
+			<form class="cmt-insert-frm" action="comment/insert" method="post" onsubmit="return memberCheck(this)">
 				<div class="input-group mb-3">
 				<input type="hidden" class="postId" name="postId" value="${p.postId }">
 				<input type="hidden" class="commentName" name="commentName" value="${m.memberId }">

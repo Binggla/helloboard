@@ -30,33 +30,40 @@ public class PostController {
 	}
 	
 	@GetMapping("/post/{job}")
-	public String postFrm(@PathVariable String job) {
+	public String postFrm(@PathVariable String job, PostVO vo, Model model) {
 		
 		String path = "";
 		
 		if (job.equals("insert")) {
 			path = "postInsert";
+		} else if (job.equals("update")) {
+			model.addAttribute("post", postService.postSelect(vo));
+			path = "postUpdate";
 		}
 		
 		return defaultPath + path;
 	}
 	
 	@PostMapping("/post/{job}")
-	public String postInsert(@PathVariable String job, 
+	public String postJob(@PathVariable String job, 
 							 RedirectAttributes ra,
 							 PostVO vo,
+							 String prevFile,
 							 MultipartFile file) {
 		
 		String msg = "";
-		String fileName = file.getOriginalFilename();
+		int newFileCnt = 0;
 		
-		if (job.equals("insert")) {
-			
-			if (fileName != null && !fileName.isEmpty() && fileName.length() != 0) {
+		if (file != null) {
+			if (!file.isEmpty()) {
+				newFileCnt++;
 				String[] fileInfo = fileService.upload(file);
 				vo.setOriginFileName(fileInfo[0]);
 				vo.setFileName(fileInfo[1]);
 			}
+		}
+	
+		if (job.equals("insert")) {
 			
 			vo.setEnrollDate(new Date(System.currentTimeMillis()));
 			
@@ -65,6 +72,32 @@ public class PostController {
 				msg = "등록이 완료되었습니다.";
 			} else {
 				msg = "등록이 정상적으로 처리되지 않았습니다.";
+			}
+			
+		} else if (job.equals("update")) {
+			
+			if (newFileCnt > 0) {
+				fileService.delete(prevFile);
+			}
+			System.out.println(vo);
+
+			int result = postService.postUpdate(vo);
+			if (result > 0) {
+				msg = "수정이 완료되었습니다.";
+			} else {
+				msg = "수정이 정상적으로 처리되지 않았습니다.";
+				
+			}
+			
+		} else if (job.equals("delete")) {
+			
+			fileService.delete(prevFile);
+			
+			int result = postService.postDelete(vo);
+			if (result > 0) {
+				msg = "삭제가 완료되었습니다.";
+			} else {
+				msg = "삭제가 정상적으로 처리되지 않았습니다.";
 			}
 		}
 		
