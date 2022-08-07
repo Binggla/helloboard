@@ -2,10 +2,55 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hello.board.comment.mapper.CommentMapper">
 
-<select id="commentListSelect">
-	SELECT *
-	FROM COMMENT
-	WHERE POSTID = #{id}
-</select>
+	<select id="commentListSelect">
+		SELECT *
+		FROM P_COMMENT
+		WHERE POSTID = #{id}
+		ORDER BY GROUP DESC, DEPTH, ID
+	</select>
+
+	<select id="commentSelect" resultMap="commentMap">
+		SELECT * FROM P_COMMENT
+		WHERE ID = #{id}
+	</select>
+	
+	<insert id="commentInsert" 
+			parameterType="com.hello.board.comment.vo.CommentVO">
+		<selectKey resultType="int" keyProperty="commentId" order="BEFORE">
+			SELECT CASE WHEN MAX(ID) != 0
+						THEN MAX(ID) + 1
+						ELSE 1 END
+						AS ID
+			FROM P_COMMENT
+		</selectKey>
+		
+		INSERT INTO P_COMMENT
+		VALUES (#{postId},#{id},#{memberId},SYSDATE,
+				#{contents},
+					<if test="depth == 0">0,#{id}</if>
+					<if test="depth == 1">1,#{group}</if>
+				,0)
+	</insert>
+	
+	<update id="commentUpdate"
+			parameterType="com.hello.board.comment.vo.CommentVO">
+		UPDATE P_COMMENT
+		<set>
+			<if test="contents != null">
+				CONTENTS = #{contents},
+				ENROLLDATE = SYSDATE
+			</if>
+		</set>
+		WHERE ID = #{commentId}
+	</update>
+	
+	<delete id="commentDelete"
+			statementType="CALLABLE">
+			
+		{ CALL COMMENT_DELETED( #{id},
+							    #{group},
+							    #{depth} )}
+		
+	</delete>
 
 </mapper>

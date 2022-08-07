@@ -1,12 +1,8 @@
-package com.hello.board.comment.mapper;
-
-import java.util.List;
+package com.hello.board.comment.service;
 
 import com.hello.board.comment.vo.CommentVO;
-import com.hello.board.post.vo.PostVO;
 
-public interface CommentMapper {
-	List<CommentVO> commentListSelect(int id);
+public interface CommentService {
 	CommentVO commentSelect(CommentVO vo);
 	int commentInsert(CommentVO vo);
 	int commentUpdate(CommentVO vo);
