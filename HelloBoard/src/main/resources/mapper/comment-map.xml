@@ -2,21 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hello.board.comment.mapper.CommentMapper">
 
-	<select id="commentListSelect">
-		SELECT *
-		FROM P_COMMENT
-		WHERE POSTID = #{id}
-		ORDER BY GROUP DESC, DEPTH, ID
-	</select>
-
-	<select id="commentSelect" resultMap="commentMap">
+	
+	<select id="commentSelect" resultType="com.hello.board.comment.vo.CommentVO">
 		SELECT * FROM P_COMMENT
 		WHERE ID = #{id}
 	</select>
 	
 	<insert id="commentInsert" 
 			parameterType="com.hello.board.comment.vo.CommentVO">
-		<selectKey resultType="int" keyProperty="commentId" order="BEFORE">
+		<selectKey resultType="int" keyProperty="id" order="BEFORE">
 			SELECT CASE WHEN MAX(ID) != 0
 						THEN MAX(ID) + 1
 						ELSE 1 END
@@ -25,11 +19,15 @@
 		</selectKey>
 		
 		INSERT INTO P_COMMENT
-		VALUES (#{postId},#{id},#{memberId},SYSDATE,
+		VALUES (#{postId},
+				#{id},
+				#{memberName},
+				SYSDATE,
 				#{contents},
-					<if test="depth == 0">0,#{id}</if>
-					<if test="depth == 1">1,#{group}</if>
-				,0)
+				<if test="depth == 0">0,#{id},</if>
+				<if test="depth == 1">1,#{group},</if>
+				0,
+				#{memberId})
 	</insert>
 	
 	<update id="commentUpdate"

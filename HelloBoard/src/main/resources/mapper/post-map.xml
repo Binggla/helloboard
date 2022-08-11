@@ -25,8 +25,8 @@
 	
 	<resultMap id="postWithComment"
 				type="com.hello.board.post.vo.PostVO">
+		<id property="id" column="id" />
 		<collection property="comments"
-					javaType="List"
 					column="id"
 					ofType="com.hello.board.comment.vo.CommentVO"
 					select="commentListSelect"

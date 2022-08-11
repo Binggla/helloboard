@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CommentVO {
-	private String postId;
+	private int postId;
 	private int id;
 	private String memberId;
 	private String memberName;

@@ -58,7 +58,9 @@
 			<div style="text-align: right;">
 				<div class="btn-group" role="group" aria-label="Button group with nested dropdown">
 				  	<div class="btn-group" role="group">
-				    <button id="btnGroupDrop1" type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">게시글 관리&nbsp;&nbsp;</button>
+				    <button id="btnGroupDrop1" type="button" class="btn btn-outline-primary dropdown-toggle" 
+				    		data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				    		게시글 관리&nbsp;&nbsp;</button>
 					    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
 					    	<form class="post-form" action="post/update" method="get">
 								<input type="hidden" name="id" th:value="${post.id}">
@@ -105,15 +107,15 @@
 			<form class="cmt-insert-frm" action="comment/insert" method="post">
 				<div class="input-group mb-3 row">
 					<div class="col-2">
-						<input type="hidden" name="postId" value="${post.id }">
+						<input type="hidden" name="postId" th:value="${post.id}">
 						<input type="hidden" name="depth" value="0">
 					    <input type="text" class="form-control" name="memberId" required="required"
 					    		placeholder="작성자" aria-label="Recipient's username">
 				    </div>
 				    <input type="text" class="commentContents form-control col-8" 
 				    		name="contents" required="required"
-				    		placeholder="댓글 내용" aria-label="Recipient's username">
-				    <button class="btn btn-primary col-2" type="submit">등록</button>
+				    		placeholder="내용" aria-label="Recipient's username">
+				    <button class="btn btn-primary col-2" type="submit">댓글 등록</button>
 			    </div>
 			</form>
 		</article>
@@ -161,7 +163,7 @@
 				</div>
 			</th:block>
 			
-			<!-- 답글 등록 모달 -->
+		<!-- 답글 등록 모달 -->
 		<div id="recmtModal" class="modal" tabindex="-1">
 		  <div class="modal-dialog modal-dialog-centered">
 		    <div class="modal-content">
@@ -170,8 +172,7 @@
 		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 		      </div>
 		      <div class="modal-body">
-		        <form id="cmtInsFrm" class="cmt-insert-frm" action="commentInsert.do" method="post" 
-						onsubmit="return memberCheck(this)">
+		        <form id="cmtInsFrm" class="cmt-insert-frm" action="comment/recmtInsert" method="post">
 					<input type="hidden" class="postId" name="postId">
 					<input type="hidden" class="commentName" name="commentName">
 					<input type="hidden" class="commentGroup" name="commentGroup">
@@ -197,7 +198,7 @@
 		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 		      </div>
 		      <div class="modal-body">
-		        <form id="cmtModFrm" class="down-form" action="commentUpdate.do" method="post">
+		        <form id="cmtModFrm" class="down-form" action="comment/update" method="post">
 					<input type="hidden" class="postId" name="postId">
 					<input type="hidden" class="commentId" name="commentId">
 					<input type="text" class="commentContents form-control" name="commentContents"
