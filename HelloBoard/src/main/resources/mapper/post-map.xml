@@ -2,26 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hello.board.post.mapper.PostMapper">
 
-	<resultMap id="postWithComment"
-				type="com.hello.board.post.vo.PostVO">
-		<collection property="comments"
-					column="postid"
-					javaType="com.hello.board.comment.vo.CommentVO"
-					select="com.hello.board.comment.mapper.commentListSelect"
-		></collection>			
-	</resultMap>
-	
 	<select id="postSelectList" resultType="com.hello.board.post.vo.PostVO">
 		SELECT * 
 		FROM ( SELECT p.*,
 		              ROWNUM AS RNUM
 		       FROM( SELECT *
 		             FROM post
-		             WHERE <if test="state == 1">1=1</if>
-						   <if test="state == 2">P.TITLE LIKE '%'||#{key}||'%'</if>
+		             WHERE <if test="svo.state == 1">1=1</if>
+						   <if test="svo.state == 2">P.TITLE LIKE '%'||#{key}||'%'</if>
 		             ORDER BY ID DESC ) p
 		      )
-		<![CDATA[WHERE 0 < RNUM AND RNUM <= 10]]>
+		<![CDATA[WHERE #{pvo.startList} < RNUM AND RNUM <= #{pvo.endList}]]>
 	</select>
 
 	<select id="getPostListCnt" resultType="int">
@@ -32,10 +23,27 @@
 		</if>
 	</select>
 	
+	<resultMap id="postWithComment"
+				type="com.hello.board.post.vo.PostVO">
+		<id property="id" column="id" />
+		<collection property="comments"
+					column="id"
+					ofType="com.hello.board.comment.vo.CommentVO"
+					select="commentListSelect"
+		></collection>			
+	</resultMap>
+	
 	<select id="postSelect" resultMap="postWithComment">
 		SELECT *
 		FROM POST
 		WHERE ID = #{id}
+	</select>
+	
+	<select id="commentListSelect" resultType="com.hello.board.comment.vo.CommentVO">
+		SELECT *
+		FROM P_COMMENT
+		WHERE POSTID = #{id}
+		ORDER BY GROUPS DESC, DEPTH, ID
 	</select>
 	
 	<insert id="postInsert" parameterType="com.hello.board.post.vo.PostVO">
@@ -62,7 +70,8 @@
 	<update id="postUpdate" parameterType="com.hello.board.post.vo.PostVO">
 		UPDATE POST
 		<set>
-			<if test="title != null">TITLE = #{title}</if>
+			<if test="title != null">MEMBERID = #{memberId}</if>
+			<if test="title != null">,TITLE = #{title}</if>
 			<if test="contents != null">, CONTENTS = #{contents}</if>
 			<if test="fileName != null">, FILENAME = #{fileName}</if>
 			<if test="originFileName != null">, ORIGINFILENAME = #{originFileName}</if>

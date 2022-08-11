@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+<meta charset="UTF-8">
+<title>게시글 조회</title>
+<style>
+	form {
+			display: inline-block;
+		}
+	
+	.down-form {
+		width: 100%;
+		display: inline-block;
+
+	}
+	
+	.down-btn {
+		width: 100%;
+		border: none;
+		background: none;
+		padding: 5px 20px;
+		text-align: left;
+
+	}
+	.cmt-insert-frm {
+		width: 100%;
+	}
+	
+	.comment {
+		text-align: left;
+		padding: 0 30px;
+		margin-bottom: 30px;
+	}
+	
+	p {
+		margin: 0px;
+	}
+	
+	ul li {
+		width: 100%;
+	}
+
+	
+	ul {
+		float:right;
+		text-align: right;
+		list-style: none;
+	}
+</style>
+</head>
+<body>
+<th:block layout:fragment="content">
+	<th:block th:if="${msg != null}">
+		<script th:inline="javascript">alert(/*[[${msg}]]*/);</script>
+	</th:block>
+	<div class="d-flex justify-content-center text-center">
+		<div class="col-8">
+			<section class="my-5">
+				<div style="text-align: right;">
+					<div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+					  	<div class="btn-group" role="group">
+					    <button id="btnGroupDrop1" type="button" class="btn btn-outline-primary dropdown-toggle" 
+					    		data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					    		게시글 관리&nbsp;&nbsp;</button>
+						    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+						    	<form class="post-form" action="post/update" method="get">
+									<input type="hidden" name="id" th:value="${post.id}">
+									<button class="down-btn" type="submit">수정</button>
+								</form>
+								<form class="down-form" action="post/delete" method="post">
+									<input type="hidden" name="id" th:value="${post.id}">
+									<input type="hidden" name="prevFile" th:value="${post.fileName}">
+									<button class="down-btn" type="submit">삭제</button>
+								</form>
+						    </div>
+					  	</div>
+					</div>
+				</div>
+				<table class="table">
+					<tr>
+						<th class="text-start" scope="col" width="110">작성자</th>
+						<td class="text-start" th:text="${post.memberId }">#</td>
+					</tr>
+					<tr>
+						<th class="text-start" scope="row">작성일</th>
+						<td class="text-start" th:text="${post.enrollDate }">#</td>
+					</tr>
+					<tr>
+						<th class="text-start" scope="row">제목</th>
+						<td class="text-start" colspan="3" th:text="${post.title }">#</td>
+					</tr>
+					<tr>
+						<th class="text-start" scope="row">첨부파일</th>
+						<td class="text-start" colspan="3">
+							<th:block th:if="${post.fileName == null}">첨부파일 없음</th:block>
+							<th:block th:unless="${post.fileName == null}">
+								<a th:href=@{/download(fileName=${post.fileName},originName=${post.originFileName})}>[[${post.originFileName}]]</a>
+							</th:block>
+						</td>
+					</tr>
+					<tr>
+						<th class="text-start" scope="row">내용</th>
+						<td class="text-start" colspan="3" th:text="${post.contents }">#</td>
+					</tr>
+				</table>
+			</section>
+			<article>
+				<form class="cmt-insert-frm" action="comment/insert" method="post">
+					<div class="input-group mb-3 row">
+						<div class="col-2">
+							<input type="hidden" name="postId" th:value="${post.id}">
+							<input type="hidden" name="depth" value="0">
+						    <input type="text" class="form-control" name="memberId" required="required"
+						    		placeholder="작성자" aria-label="Recipient's username">
+					    </div>
+					    <input type="text" class="commentContents form-control col-8" 
+					    		name="contents" required="required"
+					    		placeholder="내용" aria-label="Recipient's username">
+					    <button class="btn btn-primary col-2" type="submit">댓글 등록</button>
+				    </div>
+				</form>
+			</article>
+			<article>
+				<th:block th:each="c :${post.comments}">
+					<th:block th:if="${c.deleted eq 1 }">
+						<div class="comment"><p class="text-muted">삭제된 댓글입니다.</p></div>
+					</th:block>
+					<div>
+						<div class="comment">
+							<p class="lead" style="display:inline;">
+								<th:block th:if="${c.depth eq 1}">
+									↳ 
+								</th:block>
+								[[${c.memberId }]]
+							</p>
+							<span class="text-muted">&nbsp;[[${c.enrollDate }]]</span>
+								<ul>
+									<li class="nav-item dropdown">
+									    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"></a>
+									    <div class="dropdown-menu" style="">
+										    	<button class="cmtModModalBtn down-btn" type="button" data-bs-toggle="modal" data-bs-target="#cmtModModal" 
+										    			th:data-postid="${post.id}" th:data-commentid="${c.id }" th:data-contents="${c.contents }">수정</button>
+												<form class="down-form" action="comment/delete" method="post">
+													<input type="hidden" name="postId" th:value="${post.id}">
+													<input type="hidden" name="id" th:value="${c.id}">
+													<input type="hidden" name="groups" th:value="${c.groups}">
+													<input type="hidden" name="depth" th:value="${c.depth}">
+													<button class="down-btn" type="submit">삭제</button>
+												</form>
+											<th:block th:if="${c.depth eq 0}">
+												<button class="recmtInsBtn down-btn" type="button" data-bs-toggle="modal" data-bs-target="#recmtModal" 
+														th:data-postid="${post.id}" th:data-groups="${c.id }">답글 달기</button>
+											</th:block>
+									    </div>
+									</li>
+								</ul>
+							<div>
+								<p>&nbsp;&nbsp;[[${c.contents }]]</p>
+							</div>
+						</div>
+					</div>
+				</th:block>
+				
+			<!-- 답글 등록 모달 -->
+			<div id="recmtModal" class="modal" tabindex="-1">
+			  <div class="modal-dialog modal-dialog-centered">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h5 class="modal-title">Recomment</h5>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body">
+			        <form id="cmtInsFrm" class="cmt-insert-frm" action="comment/insert" method="post">
+						<input type="hidden" class="postId" name="postId">
+						<input type="hidden" class="commentGroup" name="groups">
+						<input type="hidden" class="commentDepth" name="depth" value="1">
+						<input type="text" class="form-control" name="memberId" 
+								required="required" placeholder="작성자">
+						<input type="text" class="commentContents form-control" name="contents"
+								placeholder="내용" required="required">
+					<div class="modal-footer">
+				        <button type="submit" class="btn btn-primary">답글 등록</button>
+				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+				    </div>
+					</form>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+			
+			<!-- 댓글 수정 모달 -->
+			<div id="cmtModModal" class="modal" tabindex="-1">
+			  <div class="modal-dialog modal-dialog-centered">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h5 class="modal-title">Comment Modify</h5>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body">
+			        <form id="cmtModFrm" class="down-form" action="comment/update" method="post">
+						<input type="hidden" class="postId" name="postId">
+						<input type="hidden" class="commentId" name="id">
+						<input type="text" class="commentContents form-control" name="contents"
+								placeholder="내용" required="required">
+					<div class="modal-footer">
+				        <button type="submit" class="btn btn-primary">댓글 수정</button>
+				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+				    </div>
+					</form>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+			</article>
+		</div>
+	</div>
+	<script>
+	let modModalBtns = document.querySelectorAll('.cmtModModalBtn');
+	for(let i=0; i<modModalBtns.length; i++) {
+		modModalBtns[i].addEventListener('click', function(){
+			let postId = this.getAttribute('data-postid');
+			let commentId = this.getAttribute('data-commentid');
+			let contents = this.getAttribute('data-contents');
+			cmtModFrm.postId.value = postId;
+			cmtModFrm.id.value = commentId;
+			cmtModFrm.contents.value = contents;
+		})
+	}
+	
+	let recmtInsBtns = document.querySelectorAll('.recmtInsBtn');
+	for(let i=0; i<recmtInsBtns.length; i++) {
+		recmtInsBtns[i].addEventListener('click', function(){
+			let postId = this.getAttribute('data-postid');
+			let commentGroup = this.getAttribute('data-groups');
+			cmtInsFrm.postId.value = postId;
+			cmtInsFrm.groups.value = commentGroup;
+		})
+	}
+	</script>
+</th:block>
+</body>
+</html>
