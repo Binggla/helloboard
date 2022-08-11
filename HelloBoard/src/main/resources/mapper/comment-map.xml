@@ -25,7 +25,7 @@
 				SYSDATE,
 				#{contents},
 				<if test="depth == 0">0,#{id},</if>
-				<if test="depth == 1">1,#{group},</if>
+				<if test="depth == 1">1,#{groups},</if>
 				0,
 				#{memberId})
 	</insert>
@@ -39,14 +39,14 @@
 				ENROLLDATE = SYSDATE
 			</if>
 		</set>
-		WHERE ID = #{commentId}
+		WHERE ID = #{id}
 	</update>
 	
 	<delete id="commentDelete"
 			statementType="CALLABLE">
 			
 		{ CALL COMMENT_DELETED( #{id},
-							    #{group},
+							    #{groups},
 							    #{depth} )}
 		
 	</delete>

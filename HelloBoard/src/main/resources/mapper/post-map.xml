@@ -43,7 +43,7 @@
 		SELECT *
 		FROM P_COMMENT
 		WHERE POSTID = #{id}
-		ORDER BY "GROUP" DESC, DEPTH, ID
+		ORDER BY GROUPS DESC, DEPTH, ID
 	</select>
 	
 	<insert id="postInsert" parameterType="com.hello.board.post.vo.PostVO">

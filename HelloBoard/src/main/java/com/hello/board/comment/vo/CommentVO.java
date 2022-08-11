@@ -15,6 +15,6 @@ public class CommentVO {
 	private Date enrollDate;
 	private String contents;
 	private int depth;
-	private int group;
+	private int groups;
 	private int deleted;
 }
