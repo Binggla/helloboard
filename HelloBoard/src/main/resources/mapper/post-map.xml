@@ -8,11 +8,11 @@
 		              ROWNUM AS RNUM
 		       FROM( SELECT *
 		             FROM post
-		             WHERE <if test="state == 1">1=1</if>
-						   <if test="state == 2">P.TITLE LIKE '%'||#{key}||'%'</if>
+		             WHERE <if test="svo.state == 1">1=1</if>
+						   <if test="svo.state == 2">P.TITLE LIKE '%'||#{key}||'%'</if>
 		             ORDER BY ID DESC ) p
 		      )
-		<![CDATA[WHERE 0 < RNUM AND RNUM <= 10]]>
+		<![CDATA[WHERE #{pvo.startList} < RNUM AND RNUM <= #{pvo.endList}]]>
 	</select>
 
 	<select id="getPostListCnt" resultType="int">

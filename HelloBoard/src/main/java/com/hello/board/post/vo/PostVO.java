@@ -24,4 +24,5 @@ public class PostVO {
 	private String originFileName;
 	
 	private List<CommentVO> comments;
+
 }

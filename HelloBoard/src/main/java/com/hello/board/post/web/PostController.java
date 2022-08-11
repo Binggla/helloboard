@@ -8,9 +8,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.hello.board.common.PagingVO;
 import com.hello.board.common.service.FileService;
 import com.hello.board.post.service.PostService;
 import com.hello.board.post.vo.PostVO;
@@ -25,7 +27,9 @@ public class PostController {
 	@GetMapping("/post")
 	public String postSelect(PostVO vo, Model model) {
 		postService.postHitUpdate(vo.getId());
+		
 		model.addAttribute("post", postService.postSelect(vo));
+
 		return defaultPath + "postSelect";
 	}
 	
