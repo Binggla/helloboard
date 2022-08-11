@@ -136,28 +136,26 @@
 								[[${c.memberId }]]
 							</p>
 							<span class="text-muted">&nbsp;[[${c.enrollDate }]]</span>
-								<th:block th:if="${c.depth eq 0}">
-									<ul>
-										<li class="nav-item dropdown">
-										    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"></a>
-										    <div class="dropdown-menu" style="">
-											    	<button class="cmtModModalBtn down-btn" type="button" data-bs-toggle="modal" data-bs-target="#cmtModModal" 
-											    			th:data-postid="${post.id}" th:data-commentid="${c.id }" th:data-contents="${c.contents }">수정</button>
-													<form class="down-form" action="comment/delete" method="post">
-														<input type="hidden" name="postId" th:value="${post.id}">
-														<input type="hidden" name="id" th:value="${c.id}">
-														<input type="hidden" name="groups" th:value="${c.groups}">
-														<input type="hidden" name="depth" th:value="${c.depth}">
-														<button class="down-btn" type="submit">삭제</button>
-													</form>
-												<th:block th:if="${c.depth eq 0}">
-													<button class="recmtInsBtn down-btn" type="button" data-bs-toggle="modal" data-bs-target="#recmtModal" 
-															th:data-postid="${post.id}" th:data-commentgroup="${c.id }">답글 달기</button>
-												</th:block>
-										    </div>
-										</li>
-									</ul>
-								</th:block>
+								<ul>
+									<li class="nav-item dropdown">
+									    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"></a>
+									    <div class="dropdown-menu" style="">
+										    	<button class="cmtModModalBtn down-btn" type="button" data-bs-toggle="modal" data-bs-target="#cmtModModal" 
+										    			th:data-postid="${post.id}" th:data-commentid="${c.id }" th:data-contents="${c.contents }">수정</button>
+												<form class="down-form" action="comment/delete" method="post">
+													<input type="hidden" name="postId" th:value="${post.id}">
+													<input type="hidden" name="id" th:value="${c.id}">
+													<input type="hidden" name="groups" th:value="${c.groups}">
+													<input type="hidden" name="depth" th:value="${c.depth}">
+													<button class="down-btn" type="submit">삭제</button>
+												</form>
+											<th:block th:if="${c.depth eq 0}">
+												<button class="recmtInsBtn down-btn" type="button" data-bs-toggle="modal" data-bs-target="#recmtModal" 
+														th:data-postid="${post.id}" th:data-groups="${c.id }">답글 달기</button>
+											</th:block>
+									    </div>
+									</li>
+								</ul>
 							<div>
 								<p>&nbsp;&nbsp;[[${c.contents }]]</p>
 							</div>
@@ -174,13 +172,14 @@
 			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			      </div>
 			      <div class="modal-body">
-			        <form id="cmtInsFrm" class="cmt-insert-frm" action="comment/recmtInsert" method="post">
+			        <form id="cmtInsFrm" class="cmt-insert-frm" action="comment/insert" method="post">
 						<input type="hidden" class="postId" name="postId">
-						<input type="hidden" class="commentName" name="commentName">
-						<input type="hidden" class="commentGroup" name="commentGroup">
-						<input type="hidden" class="commentDepth" name="commentDepth" value="1">
-						<input type="text" class="commentContents form-control" name="commentContents"
-								placeholder="Write your recomment" aria-label="Recipient's username" aria-describedby="button-addon2" required="required">
+						<input type="hidden" class="commentGroup" name="groups">
+						<input type="hidden" class="commentDepth" name="depth" value="1">
+						<input type="text" class="form-control" name="memberId" 
+								required="required" placeholder="작성자">
+						<input type="text" class="commentContents form-control" name="contents"
+								placeholder="내용" required="required">
 					<div class="modal-footer">
 				        <button type="submit" class="btn btn-primary">답글 등록</button>
 				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
@@ -204,7 +203,7 @@
 						<input type="hidden" class="postId" name="postId">
 						<input type="hidden" class="commentId" name="id">
 						<input type="text" class="commentContents form-control" name="contents"
-								placeholder="Write your comment" aria-label="Recipient's username" aria-describedby="button-addon2" required="required">
+								placeholder="내용" required="required">
 					<div class="modal-footer">
 				        <button type="submit" class="btn btn-primary">댓글 수정</button>
 				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
@@ -234,10 +233,9 @@
 	for(let i=0; i<recmtInsBtns.length; i++) {
 		recmtInsBtns[i].addEventListener('click', function(){
 			let postId = this.getAttribute('data-postid');
-			let commentGroup = this.getAttribute('data-commentgroup');
+			let commentGroup = this.getAttribute('data-groups');
 			cmtInsFrm.postId.value = postId;
-			cmtInsFrm.commentGroup.value = commentGroup;
-			cmtInsFrm.commentName.value = '${m.memberId}';
+			cmtInsFrm.groups.value = commentGroup;
 		})
 	}
 	</script>
