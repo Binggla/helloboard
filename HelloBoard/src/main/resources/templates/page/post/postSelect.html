@@ -92,6 +92,11 @@
 						<td class="text-start" colspan="3" th:text="${post.title }">#</td>
 					</tr>
 					<tr>
+						<th class="text-start" scope="row">내용</th>
+						<td class="text-start" th:utext="${post.contents }">
+						</td>
+					</tr>
+					<tr>
 						<th class="text-start" scope="row">첨부파일</th>
 						<td class="text-start" colspan="3">
 							<th:block th:if="${post.fileName == null}">첨부파일 없음</th:block>
@@ -99,10 +104,6 @@
 								<a th:href=@{/download(fileName=${post.fileName},originName=${post.originFileName})}>[[${post.originFileName}]]</a>
 							</th:block>
 						</td>
-					</tr>
-					<tr>
-						<th class="text-start" scope="row">내용</th>
-						<td class="text-start" colspan="3" th:text="${post.contents }">#</td>
 					</tr>
 				</table>
 			</section>
@@ -216,28 +217,29 @@
 			</article>
 		</div>
 	</div>
-	<script>
-	let modModalBtns = document.querySelectorAll('.cmtModModalBtn');
-	for(let i=0; i<modModalBtns.length; i++) {
-		modModalBtns[i].addEventListener('click', function(){
-			let postId = this.getAttribute('data-postid');
-			let commentId = this.getAttribute('data-commentid');
-			let contents = this.getAttribute('data-contents');
-			cmtModFrm.postId.value = postId;
-			cmtModFrm.id.value = commentId;
-			cmtModFrm.contents.value = contents;
-		})
-	}
 	
-	let recmtInsBtns = document.querySelectorAll('.recmtInsBtn');
-	for(let i=0; i<recmtInsBtns.length; i++) {
-		recmtInsBtns[i].addEventListener('click', function(){
-			let postId = this.getAttribute('data-postid');
-			let commentGroup = this.getAttribute('data-groups');
-			cmtInsFrm.postId.value = postId;
-			cmtInsFrm.groups.value = commentGroup;
-		})
-	}
+	<script>
+		let modModalBtns = document.querySelectorAll('.cmtModModalBtn');
+		for(let i=0; i<modModalBtns.length; i++) {
+			modModalBtns[i].addEventListener('click', function(){
+				let postId = this.getAttribute('data-postid');
+				let commentId = this.getAttribute('data-commentid');
+				let contents = this.getAttribute('data-contents');
+				cmtModFrm.postId.value = postId;
+				cmtModFrm.id.value = commentId;
+				cmtModFrm.contents.value = contents;
+			})
+		}
+		
+		let recmtInsBtns = document.querySelectorAll('.recmtInsBtn');
+		for(let i=0; i<recmtInsBtns.length; i++) {
+			recmtInsBtns[i].addEventListener('click', function(){
+				let postId = this.getAttribute('data-postid');
+				let commentGroup = this.getAttribute('data-groups');
+				cmtInsFrm.postId.value = postId;
+				cmtInsFrm.groups.value = commentGroup;
+			})
+		}
 	</script>
 </th:block>
 </body>

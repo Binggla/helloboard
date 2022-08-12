@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hello.board.common.PagingVO;
-import com.hello.board.common.SearchVO;
+import com.hello.board.common.vo.PagingVO;
+import com.hello.board.common.vo.SearchVO;
 import com.hello.board.post.mapper.PostMapper;
 import com.hello.board.post.service.PostService;
 import com.hello.board.post.vo.PostVO;

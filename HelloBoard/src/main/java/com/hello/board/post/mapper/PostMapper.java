@@ -5,8 +5,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.hello.board.common.PagingVO;
-import com.hello.board.common.SearchVO;
+import com.hello.board.common.vo.PagingVO;
+import com.hello.board.common.vo.SearchVO;
 import com.hello.board.post.vo.PostVO;
 
 @Mapper

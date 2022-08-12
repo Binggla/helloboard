@@ -5,6 +5,12 @@
 <head>
 <meta charset="UTF-8">
 <title>게시글 등록</title>
+<style>
+	.ck-editor__editable {
+		min-height: 380px;
+		width: 100%;
+	}
+</style>
 </head>
 <body>
 <th:block layout:fragment="content">
@@ -41,8 +47,7 @@
 					</tr>
 					<tr>
 						<td class="text-start" colspan="2">
-							<textarea class="form-control" id="" name="contents" 
-									  rows="10" placeholder="Wrtie a Contents"></textarea>
+							<textarea id="ckfinder" class="form-control" name="contents"></textarea>
 						</td>
 					</tr>
 				</table>
@@ -54,6 +59,88 @@
 		</section>
 	</div>
 </div>
+<script th:src="@{/js/plugins/ckeditor5/build/ckeditor.js}"></script>
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		ckfinder();
+	})
+	
+	// ckfinder
+	function ckfinder() {
+	    let ckfinder = document.querySelector('#ckfinder');
+	
+	    if (ckfinder) {
+	      ClassicEditor
+	        .create(document.querySelector('#ckfinder'),
+	        		{
+	        			language:'ko',
+	        			ckfinder: {
+	        				uploadUrl: '/editorUpload'
+	        			},
+	        			fontColor: {
+	        	            colors: [
+	        	                {
+	        	                    color: 'hsl(0, 0%, 0%)',
+	        	                    label: 'Black'
+	        	                },
+	        	                {
+	        	                    color: 'hsl(0, 0%, 30%)',
+	        	                    label: 'Dim grey'
+	        	                },
+	        	                {
+	        	                    color: 'hsl(0, 0%, 60%)',
+	        	                    label: 'Grey'
+	        	                },
+	        	                {
+	        	                    color: 'hsl(0, 0%, 90%)',
+	        	                    label: 'Light grey'
+	        	                },
+	        	                {
+	        	                    color: 'hsl(0, 0%, 100%)',
+	        	                    label: 'White',
+	        	                    hasBorder: true
+	        	                }
+	        	            ]
+	        	        },
+	        			image: {
+	        			      styles: ["alignLeft", "alignCenter", "alignRight"],      
+	        			      toolbar: [
+	        			        "imageStyle:alignLeft",
+	        			        "imageStyle:alignCenter",
+	        			        "imageStyle:alignRight",
+	        			        "|",
+	        			        "imageTextAlternative",
+	        			      ],
+	        			      resizeUnit: 'px',
+	    		            resizeOptions: [
+	    		                {
+	    		                    name: 'resizeImage:original',
+	    		                    label: 'Original',
+	    		                    value: null
+	    		                },
+	    		                {
+	    		                    name: 'resizeImage:100',
+	    		                    label: '100px',
+	    		                    value: '100'
+	    		                },
+	    		                {
+	    		                    name: 'resizeImage:200',
+	    		                    label: '200px',
+	    		                    value: '200'
+	    		                }
+	    		            ]
+	        			 }
+	        		})
+	        .then(editor => {
+	          window.editor = editor;
+	        })
+	        .catch(error => {
+	          console.error('There was a problem initializing the classic editor.', error);
+	        });
+	    }
+	    
+	}
+</script>
 </th:block>
 </body>
 </html>
