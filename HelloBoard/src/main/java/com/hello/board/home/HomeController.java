@@ -6,8 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.hello.board.common.PagingVO;
-import com.hello.board.common.SearchVO;
+import com.hello.board.common.vo.PagingVO;
+import com.hello.board.common.vo.SearchVO;
 import com.hello.board.post.service.PostService;
 
 @Controller

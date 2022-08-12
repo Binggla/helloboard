@@ -2,8 +2,8 @@ package com.hello.board.post.service;
 
 import java.util.List;
 
-import com.hello.board.common.PagingVO;
-import com.hello.board.common.SearchVO;
+import com.hello.board.common.vo.PagingVO;
+import com.hello.board.common.vo.SearchVO;
 import com.hello.board.post.vo.PostVO;
 
 public interface PostService {

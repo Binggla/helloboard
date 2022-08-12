@@ -8,6 +8,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hello.board.common.service.FileService;
+import com.hello.board.common.vo.FileVO;
 
 /**
  * @brief 파일 업로드, 삭제
@@ -32,7 +33,7 @@ public class FileServiceImpl implements FileService {
 	String fileDir = "/Users/binggla/Desktop/temp/";
 	
 	@Override
-	public String[] upload(MultipartFile file) {
+	public FileVO upload(MultipartFile file) {
 		
 		String saveDir = fileDir;
 		File dir = new File(saveDir);
@@ -40,7 +41,7 @@ public class FileServiceImpl implements FileService {
 			dir.mkdirs();
 		}
 		
-		String[] fileInfo = new String[2];
+		FileVO vo = new FileVO();
 		
 		String originName = file.getOriginalFilename();
 		String uid = UUID.randomUUID().toString();
@@ -48,8 +49,8 @@ public class FileServiceImpl implements FileService {
 		
 		File target = new File(saveDir,fileName);
 		
-		fileInfo[0] = originName;
-		fileInfo[1] = fileName;
+		vo.setFileName(fileName);
+		vo.setOriginFileName(originName);
 		
 		try {
 			FileCopyUtils.copy(file.getBytes(), target);
@@ -57,7 +58,7 @@ public class FileServiceImpl implements FileService {
 			e.printStackTrace();
 		}
 		
-		return fileInfo;
+		return vo;
 
 	}
 

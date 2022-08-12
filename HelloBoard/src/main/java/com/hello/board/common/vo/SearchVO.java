@@ -1,4 +1,4 @@
-package com.hello.board.common;
+package com.hello.board.common.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

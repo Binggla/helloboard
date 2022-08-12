@@ -8,12 +8,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.hello.board.common.PagingVO;
 import com.hello.board.common.service.FileService;
+import com.hello.board.common.vo.FileVO;
 import com.hello.board.post.service.PostService;
 import com.hello.board.post.vo.PostVO;
 
@@ -61,9 +60,9 @@ public class PostController {
 		if (file != null) {
 			if (!file.isEmpty()) {
 				newFileCnt++;
-				String[] fileInfo = fileService.upload(file);
-				vo.setOriginFileName(fileInfo[0]);
-				vo.setFileName(fileInfo[1]);
+				FileVO fvo = fileService.upload(file);
+				vo.setOriginFileName(fvo.getOriginFileName());
+				vo.setFileName(fvo.getFileName());
 			}
 		}
 	
